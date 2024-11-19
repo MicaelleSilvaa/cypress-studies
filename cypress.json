@@ -1,6 +1,0 @@
-{
-    "env": {
-      "usuario": "${CYPRESS_USUARIO}",
-      "senha": "${CYPRESS_SENHA}"
-    }
-  }
