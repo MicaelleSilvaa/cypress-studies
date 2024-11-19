@@ -1,15 +1,34 @@
-describe('Página principal do site do Senac', () => {
-  it('Deve carregar a página e exibir o título correto', () => {
-      // Visita a página principal do Senac PE
-      cy.visit('https://www.pe.senac.br/');
-      
-      // Verifica se o título da página contém "Senac Pernambuco" (ou o texto esperado)
-      cy.title().should('include', 'Senac Pernambuco');
-      
-      // Verifica se o botão "Acesso" ou outro botão de login está visível (substitua pelo texto correto)
-      cy.contains('a', 'Espaço do aluno').should('be.visible');
-      
-      // Verifica se o campo de busca está visível
-      cy.get('input[type="search"]').should('be.visible');
+import '../../cypress.json';
+
+describe('Site Senac', () => {
+  it.skip('The user must be able to see items and click on them', () => {
+    const urlEspacoAluno = 'https://faculdadesenacpe.edu.br/espaco-do-aluno';
+    const expectedTitle = 'Senac Pernambuco';
+    const espacoDoAlunoText = 'Espaço do Aluno';
+    const portalAcademicoText = 'Portal Acadêmico';
+
+    cy.visit(urlEspacoAluno);
+    cy.title().should('include', expectedTitle);
+    cy.contains('a', espacoDoAlunoText).should('be.visible');
+    cy.contains('a', portalAcademicoText).should('be.visible').then(($link) => {
+      if ($link.is(':visible')) {
+        cy.wrap($link).click();
+      }
+    });
   });
+
+  it('The user can log in', () => {
+    const urlAcessoAluno = 'https://portal.faculdadesenacpe.edu.br/senac/';
+    const textUsuario = 'input[type=text]';
+    const textSenha = 'input[type=password]';
+    const botaoEntrar = '.btn.btn-flat';
+
+    cy.visit(urlAcessoAluno);
+    cy.get(textUsuario).click();
+    cy.get(textUsuario).type(Cypress.env('USUARIO'));
+    cy.get(textSenha).click();
+    cy.get(textSenha).type(Cypress.env('SENHA'));
+    cy.get(botaoEntrar).click();
+    cy.get('.navbar-nav > li > a').contains('Micaelle').should('be.visible');
+  })
 });
