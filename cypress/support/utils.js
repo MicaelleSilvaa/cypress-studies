@@ -1,21 +1,22 @@
 export const SELECTORS = {
-  urlBaseSenac: 'https://faculdadesenacpe.edu.br/espaco-do-aluno',
-
-  linkEspacoDoAluno: 'a[href*="espaco-do-aluno"]',
-  linkPortalAcademico: 'a.item-aluno:contains("Portal Acadêmico")',
-
-  usuario: 'input[type=text]',
-  senha: 'input[type=password]',
-  botaoEntrar: '.btn.btn-flat',
-  navbarItem: 'section#aviso-principal.titulo',
+  baseUrl: 'https://faculdadesenacpe.edu.br/espaco-do-aluno',
+  studentLink: 'a[href*="espaco-do-aluno"]',
+  academicLink: 'a.item-aluno:contains("Portal Acadêmico")',
+  usernameInput: 'input[type=text]',
+  passwordInput: 'input[type=password]',
+  loginButton: '.btn.btn-flat',
+  navbarTitle: 'section#aviso-principal.titulo',
+  loginTypeSelect: '#fTipo',
+  loginTypeStudent: 'aluno',
+  welcomeMessage: 'Bem-vindo ao AcadWeb',
 };
 
-export function goToPortal() {
-  cy.visit(SELECTORS.urlBaseSenac);
+export function navigateToPortal() {
+  cy.visit(SELECTORS.baseUrl);
 
   cy.title().should('include', 'Senac Pernambuco');
-  cy.contains(SELECTORS.linkEspacoDoAluno, 'Espaço do Aluno').should('be.visible');
-  cy.contains(SELECTORS.linkPortalAcademico, 'Portal Acadêmico')
+  cy.contains(SELECTORS.studentLink, 'Espaço do Aluno').should('be.visible');
+  cy.contains(SELECTORS.academicLink, 'Portal Acadêmico')
     .should('be.visible')
     .then(($link) => {
       if ($link.is(':visible')) {
@@ -24,8 +25,18 @@ export function goToPortal() {
     });
 }
 
-export function goToLogin(usuario = '', senha = '') {
-  cy.get(SELECTORS.usuario).click().type(usuario);
-  cy.get(SELECTORS.senha).click().type(senha);
-  cy.get(SELECTORS.botaoEntrar).click();
+export function selectLoginType(type = SELECTORS.loginTypeStudent) {
+  cy.get(SELECTORS.loginTypeSelect).then(($select) => {
+    if ($select.val() !== type) {
+      cy.get(SELECTORS.loginTypeSelect).select(type);
+    }
+  });
+
+  cy.get(SELECTORS.loginTypeSelect).should('have.value', type);
+}
+
+export function goToLogin(username = '', password = '') {
+  cy.get(SELECTORS.usernameInput).click().type(username);
+  cy.get(SELECTORS.passwordInput).click().type(password);
+  cy.get(SELECTORS.loginButton).click();
 }

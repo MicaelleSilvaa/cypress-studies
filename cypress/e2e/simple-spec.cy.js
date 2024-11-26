@@ -1,11 +1,14 @@
-import { SELECTORS, goToLogin, goToPortal } from '../support/utils';
+import { SELECTORS, navigateToPortal, selectLoginType, goToLogin } from '../support/utils';
 
-describe('Site Senac', () => {
+describe('Senac site', () => {
   it('The user must be able to log in', () => {
-    goToPortal();
+    navigateToPortal();
+    selectLoginType();
     goToLogin();
 
-    cy.get(SELECTORS.navbarItem)
-      .contains('Bem-vindo ao AcadWeb').should('be.visible');
-  })
+    cy.url().should('include', '/acadweb.modulo.aluno.php');
+    cy.get(SELECTORS.navbarTitle)
+      .contains(SELECTORS.welcomeMessage)
+      .should('be.visible');
+  });
 });
